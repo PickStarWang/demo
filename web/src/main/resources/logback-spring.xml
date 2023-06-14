@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration>
+<configuration>
+	<!-- appender -->
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+		</encoder>
+	</appender>
+    <appender name="logfile" class="ch.qos.logback.core.rolling.RollingFileAppender">   
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>log/dermatology_hospital.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<maxHistory>31</maxHistory>
+		</rollingPolicy>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+        	<charset>UTF-8</charset>
+            <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+        </encoder>
+    </appender>
+	<appender name="mqlogfile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>log/mqsendlog/mqsend.%d{yyyy-MM-dd}.log</FileNamePattern>
+			<maxHistory>31</maxHistory>
+		</rollingPolicy>
+		<encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+			<charset>UTF-8</charset>
+			<Pattern>%d{yyyy-MM-dd HH:mm:ss}|%msg%n</Pattern>
+		</encoder>
+	</appender>
+	<root>
+		<level value="INFO"/>
+		<appender-ref ref="stdout" />
+		<appender-ref ref="logfile" />
+	</root>
+	<!-- logger -->
+    <!-- 测试环境+开发环境. 多个使用逗号隔开. -->  
+      <springProfile name="test,prod">
+         	<logger name="com.jcmy">
+ 				<level value="info"/>
+			</logger>
+		    <logger name="MqLog" level="INFO" additivity="false">
+			  <appender-ref ref="mqlogfile" />
+		    </logger>
+      </springProfile>
+
+     <!--&lt;!&ndash; java -jar xxx.jar -spring.profiles.active=prod &ndash;&gt;-->
+      <!--<springProfile name="prod">  -->
+         	<!--<logger name="com.rtmap">-->
+ 				<!--<level value="info"/>-->
+ 			<!--</logger>-->
+ 			<!--<logger name="com.rtmap.plat.log.SdkLog" level="INFO" additivity="false">-->
+ 				<!--<appender-ref ref="sdkInfo"/>-->
+ 			<!--</logger>  -->
+      <!--</springProfile>  -->
+</configuration>
